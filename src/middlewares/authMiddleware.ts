@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
+import { string } from "joi";
 import jwt from "jsonwebtoken";
 
 interface AuthRequest extends Request {
-  user?: any;
+  user?: {id:string};
 }
 
 export const authMiddleware = (
@@ -19,7 +20,7 @@ export const authMiddleware = (
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded;
+    req.user = {id:(decoded as any).id};
     next();
   } catch (error) {
     if (error instanceof Error) {

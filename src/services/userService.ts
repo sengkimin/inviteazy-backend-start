@@ -5,7 +5,7 @@ import {
   IUserWithoutPassword,
 } from "../interfaces/userInterface";
 import jwt from "jsonwebtoken";
-import bycrpt from "bcrypt";
+import bcrypt from "bcrypt";
 
 export class UserService implements IUserService {
   constructor(private userRepository: IUserRepository) {}
@@ -35,6 +35,7 @@ export class UserService implements IUserService {
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
+
     return { user: newUser, token };
   }
 
@@ -45,7 +46,7 @@ export class UserService implements IUserService {
       throw Object.assign(new Error("User not found"), { status: 404 });
     }
 
-    const isValidPassword = await bycrpt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       throw Object.assign(new Error("Invalid password"), { status: 400 });
     }
@@ -57,9 +58,13 @@ export class UserService implements IUserService {
     return {
       user: {
         id: user.id,
-        name: user.name,
-        role: user.role,
         email: user.email,
+        full_name: user.full_name,
+        phone_number: user.phone_number,
+        profile_picture: user.profile_picture,
+        address: user.address,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
       },
       token,
     };

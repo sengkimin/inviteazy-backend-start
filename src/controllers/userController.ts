@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IUser, IUserService } from "../interfaces/userInterface";
 import redisCache from "../services/cacheService";
+
 export class UserController {
   private userService: IUserService;
 
@@ -10,11 +11,8 @@ export class UserController {
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.baseUrl, req.originalUrl);
-
       const result = await this.userService.getAllUsers();
       res.json({ message: "Get all users.", data: result });
-      return;
     } catch (error) {
       next(error);
     }
@@ -23,8 +21,8 @@ export class UserController {
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const cacheKey = `data:${req.method}:${req.originalUrl}`;
-
       const cacheData = await redisCache.get(cacheKey);
+
       if (cacheData) {
         res.json({
           message: "Cache: Get user by Id",
@@ -35,7 +33,6 @@ export class UserController {
 
       const { id } = req.params;
       const result = await this.userService.getUserById(id);
-
       await redisCache.set(cacheKey, JSON.stringify(result), 360);
 
       res.json({ message: "Api: Get user by Id", data: result });
@@ -46,19 +43,42 @@ export class UserController {
 
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, password, role }: Omit<IUser, "id"> = req.body;
-      const newUser = await this.userService.createUser({
-        name,
+      const {
         email,
         password,
-        role,
+        full_name,
+        phone_number,
+        profile_picture,
+        address,
+      }: Omit<IUser, "id"> = req.body;
+  
+      console.log("Creating user with:", req.body);
+  
+      const newUser = await this.userService.createUser({
+        email,
+        password,
+        full_name,
+        phone_number,
+        profile_picture,
+        address,
       });
-      res
-        .status(201)
-        .json({ message: "A new user was created.", data: newUser });
-    } catch (err) {
-      console.log(err);
-      next(err);
+  
+      res.status(201).json({
+        message: "A new user was created.",
+        data: newUser,
+      });
+    } catch (error) {
+      console.error("Create user failed:", error);
+  
+      const message = error instanceof Error ? error.message : "Unexpected error";
+  
+      res.status(500).json({
+        status: "error",
+        statusCode: 500,
+        message: "Could not create user",
+        error: message,
+      });
     }
   }
+  
 }
