@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export const connectMongoDB = async () => {
   try {
+    const URI = "mongodb+srv://inseng:kimin12345@cluster0.jcvhu.mongodb.net/Inviteazy?retryWrites=true&w=majority";
     const URI = process.env.MONGO_URI ?? "";
     const connOptions = {
       useNewUrlParser: true,
@@ -18,3 +19,6 @@ export const connectMongoDB = async () => {
     process.exit(1);
   }
 };
+
+
+

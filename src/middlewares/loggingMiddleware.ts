@@ -35,7 +35,8 @@
 
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../services/loggerService";
-import { SensitiveInfo } from "../utils/sensitiveInfo";
+import { SensitiveInfo } from "../utils/sensitive";
+
 export function loggingMiddleware(req: Request, res: Response, next: NextFunction) {
   const { method, url, headers, body } = req;
 

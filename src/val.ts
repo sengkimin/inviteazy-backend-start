@@ -1,3 +1,12 @@
+
+
+// const nameSchema = z.string();
+// nameSchema.parse("John"); // ✅
+// nameSchema.parse(42);     // ❌ throws ZodError
+
+
+z.string().min(3).max(10);
+z.number().min(1).max(100);
 import { z } from 'zod';
 
 
