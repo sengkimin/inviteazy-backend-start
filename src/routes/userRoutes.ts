@@ -16,7 +16,10 @@ export default function userRoutes(controller: UserController): Router {
     validateIdInURLParam,
     controller.getUserById.bind(controller)
   );
-  router.post("/", validateUser, controller.createUser.bind(controller));
+
+  router.post("/create", validateUser, controller.createUser.bind(controller));
+
+
 
   return router;
 }

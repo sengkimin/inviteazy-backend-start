@@ -46,13 +46,28 @@ export class UserController {
 
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, password, role }: Omit<IUser, "id"> = req.body;
+      const {
+        email,
+        password, 
+        full_name, 
+        phone_number,
+        profile_picture,
+        address
+        }: Omit<IUser, "id"> = req.body;
+
+
       const newUser = await this.userService.createUser({
-        name,
         email,
         password,
-        role,
+        full_name,
+        phone_number,
+        profile_picture,
+        address,
+        create_at: new Date(),
+        update_at: new Date()
+        
       });
+     
       res
         .status(201)
         .json({ message: "A new user was created.", data: newUser });

@@ -1,9 +1,13 @@
 export interface IUser {
-  id?: string;
-  name: string;
+  id? : string;
   email: string;
   password: string;
-  role: "admin" | "public" | "tourist";
+  full_name: string;
+  phone_number?: string;
+  profile_picture?: string;
+  address?: string;
+  create_at?: Date;
+  update_at?: Date;
 }
 
 export interface IUserWithoutPassword extends Omit<IUser, "password"> {}
@@ -26,3 +30,4 @@ export interface IUserService {
     password: string
   ): Promise<{ user: IUserWithoutPassword; token: string }>;
 }
+ 
