@@ -23,6 +23,15 @@ import { connectPostgresDb } from "./config/postgresdb/db";
 // import { connectMongoDB } from "./config/mongodb/db";
 
 
+
+// import authRoutes from "./routes/authRoutes";
+// import { connectPostgresDb } from "./config/postgresdb/db";
+// import { PostgresUserRepository } from "./repositories/postgres/userRepository";
+// import { loggingMiddleware } from "./middlewares/loggingMiddleware";
+// import eventRoutes from "./routes/eventRoutes";
+// import { connectMongoDB } from "./config/mongodb/db";
+// import { MongoUserRepository } from "./repositories/mongodb/userRepository";
+
 dotenv.config();
 
 const app = express();
@@ -51,19 +60,22 @@ const userController = new UserController(userService);
 const authController = new AuthController(userService);
 // const eventController = new EventController(eventService);
 const eventController = new EventController(eventService, inviteeService);
-
 const inviteeController = new InviteeController(inviteeService);
+
+
 
 
 // Middlewares
 app.use(express.json());
 app.use(loggingMiddleware);
 
+
 // Routes
 app.use("/api/users", userRoutes(userController));
 app.use("/api/auth", authRoutes(authController));
 app.use("/api/v1/events", eventRoutes(eventController)); 
 app.use("/api/v1/invitations", inviteeRoutes(inviteeController)); 
+
 
 // Handle Errors
 app.use(errorMiddleware);

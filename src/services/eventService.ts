@@ -17,5 +17,3 @@ export class EventService implements IEventService {
 }
 
 
-
-

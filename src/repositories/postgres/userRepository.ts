@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import bcrypt from "bcrypt";
 import { IUser, IUserRepository, IUserWithoutPassword } from "../../interfaces/userInterface";
 import { queryWithLogging } from "./utils";
+import { v4 as uuidv4 } from 'uuid';
 
 export class PostgresUserRepository implements IUserRepository {
   constructor(private pool: Pool) {}
@@ -22,8 +23,13 @@ export class PostgresUserRepository implements IUserRepository {
       [id]
     );
     return rows[0] || null;
+  constructor(pool: Pool) {
+    this.pool = pool;
   }
 
+
+
+  // Find a user by email
   async findByEmail(email: string): Promise<IUser | null> {
     const { rows } = await queryWithLogging(
       this.pool,
@@ -53,7 +59,21 @@ export class PostgresUserRepository implements IUserRepository {
       ]
     );
     return rows[0];
+    try {
+      const { rows }: QueryResult = await queryWithLogging(
+        this.pool,
+        "SELECT * FROM users WHERE email = $1",
+        [email]
+      );
+      return rows[0] || null;
+    } catch (error) {
+      console.error("Error in findByEmail:", error);
+      throw new Error(`Failed to retrieve user with email: ${email}`);
+    }
   }
+
+  // Create a new user
+ 
 }
 ﻿
 

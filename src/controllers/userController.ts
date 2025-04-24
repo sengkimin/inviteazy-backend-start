@@ -54,6 +54,9 @@ export class UserController {
   
       console.log("Creating user with:", req.body);
   
+      
+
+
       const newUser = await this.userService.createUser({
         email,
         password,
@@ -61,6 +64,7 @@ export class UserController {
         phone_number,
         profile_picture,
         address,
+
       });
   
       res.status(201).json({
@@ -69,15 +73,8 @@ export class UserController {
       });
     } catch (error) {
       console.error("Create user failed:", error);
-  
-      const message = error instanceof Error ? error.message : "Unexpected error";
-  
-      res.status(500).json({
-        status: "error",
-        statusCode: 500,
-        message: "Could not create user",
-        error: message,
-      });
+ 
+      next(err);
     }
   }
   

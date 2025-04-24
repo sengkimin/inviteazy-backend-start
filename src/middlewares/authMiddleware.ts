@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 interface AuthRequest extends Request {
   user?: {id:string};
-}
+
 
 export const authMiddleware = (
   req: AuthRequest,
