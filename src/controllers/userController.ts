@@ -74,7 +74,7 @@ export class UserController {
     } catch (error) {
       console.error("Create user failed:", error);
  
-      next(err);
+      next(error);
     }
   }
   

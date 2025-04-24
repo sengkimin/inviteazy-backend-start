@@ -20,18 +20,6 @@ import { connectPostgresDb } from "./config/postgresdb/db";
 
 
 
-// import { connectMongoDB } from "./config/mongodb/db";
-
-
-
-// import authRoutes from "./routes/authRoutes";
-// import { connectPostgresDb } from "./config/postgresdb/db";
-// import { PostgresUserRepository } from "./repositories/postgres/userRepository";
-// import { loggingMiddleware } from "./middlewares/loggingMiddleware";
-// import eventRoutes from "./routes/eventRoutes";
-// import { connectMongoDB } from "./config/mongodb/db";
-// import { MongoUserRepository } from "./repositories/mongodb/userRepository";
-
 dotenv.config();
 
 const app = express();

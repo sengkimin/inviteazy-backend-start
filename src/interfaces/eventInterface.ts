@@ -17,6 +17,7 @@ export interface IEvent {
   export interface IEventService {
     getAllEvents(): Promise<IEvent[]>;
     createEvent(event: Omit<IEvent, "id">): Promise<IEvent>;
+  }
 
 
 // type UUID = `${string}-${string}-${string}-${string}-${string}`;

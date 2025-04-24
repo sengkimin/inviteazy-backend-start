@@ -59,15 +59,12 @@ export class UserService implements IUserService {
       user: {
         id: user.id,
         email: user.email,
-
-        password: user.password,
         full_name: user.full_name,
         phone_number: user.phone_number,
         profile_picture: user.profile_picture,
         address: user.address,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-
+        created_at: user.create_at,
+        updated_at: user.update_at,
       },
       token,
     };
