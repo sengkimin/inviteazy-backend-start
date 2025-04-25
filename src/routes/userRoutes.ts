@@ -10,7 +10,8 @@ export default function userRoutes(controller: UserController): Router {
   router.get("/:id",authMiddleware,validateIdInURLParam,controller.getUserById.bind(controller));
   router.post("/create", validateUser,controller.createUser.bind(controller));
 
-
+  
+  
 
   return router;
 }

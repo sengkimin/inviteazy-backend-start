@@ -1,15 +1,16 @@
 
 import { Router } from "express";
 import { InviteeController } from "../controllers/inviteesController";
-import { authMiddleware } from "../middlewares/authMiddleware"; 
+import { authMiddleware } from "../middlewares/authMiddleware";
+import {validateInviteeStatus} from "../middlewares/validationMiddleware" 
 
 export default function inviteeRoutes(controller: InviteeController): Router {
   const router = Router();
 
-  router.get("/", controller.getAllInvitees.bind(controller));
-  router.get("/event/:eventId", controller.getInviteesByEventId.bind(controller));
-
-  router.patch("/:inviteeId", authMiddleware, controller.updateInviteeStatus.bind(controller));
+  router.patch("/:inviteeId",validateInviteeStatus, authMiddleware, controller.updateInviteeStatus.bind(controller));
+  
+  router.get("/", authMiddleware, controller.getAllInvitees.bind(controller));
+  router.get("/:eventId", authMiddleware, controller.getInviteesByEventId.bind(controller));
 
   return router;
 }
