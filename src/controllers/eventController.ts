@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { IEventService } from "../interfaces/eventInterface";
 import { IInviteeService } from "../interfaces/inviteesInterface"; 
 import { IEvent } from "../interfaces/eventInterface";
+import redisCache from "../services/cacheService";
+
 
 interface AuthenticatedRequest extends Request {
   user?: { id: string };
@@ -38,7 +40,17 @@ export class EventController {
 
   async getAllEvents(req: Request, res: Response, next: NextFunction) {
     try {
+      const cacheKey = `data:${req.method}:${req.originalUrl}`;
+      const cacheData = await redisCache.get(cacheKey);
+  
+      if (cacheData) {
+        res.json({ message: "Cache: Get all events", data: JSON.parse(cacheData) });
+        return;
+      }
+  
       const result = await this.eventService.getAllEvents();
+      await redisCache.set(cacheKey, JSON.stringify(result), 360);
+  
       res.json({ message: "Get all events.", data: result });
     } catch (error) {
       next(error);
@@ -62,9 +74,16 @@ export class EventController {
     }
   }
 
-
   async getGuestInsights(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const cacheKey = `data:${req.method}:${req.originalUrl}`;
+      const cacheData = await redisCache.get(cacheKey);
+  
+      if (cacheData) {
+        res.status(200).json({ message: "Cache: Get guest insights", data: JSON.parse(cacheData) });
+        return;
+      }
+  
       const event_id = req.params.event_id;
       const insights = await this.inviteeService.getInviteesByEventId(event_id);
   
@@ -77,7 +96,7 @@ export class EventController {
         maybe: 0,
         attended: 0,
         totalContribution: 0,
-        totalGiftMoney: 0 
+        totalGiftMoney: 0,
       };
   
       for (const invitee of insights) {
@@ -95,8 +114,9 @@ export class EventController {
         }
       }
   
-      res.status(200).json({ data: statusCounts });
+      await redisCache.set(cacheKey, JSON.stringify(statusCounts), 360);
   
+      res.status(200).json({ message: "Api: Get guest insights", data: statusCounts });
     } catch (error) {
       console.error("Error fetching guest insights:", error);
       res.status(500).json({ error: "Internal server error" });

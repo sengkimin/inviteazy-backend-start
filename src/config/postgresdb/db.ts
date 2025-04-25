@@ -16,3 +16,4 @@ export const connectPostgresDb = (): Pool => {
 
   return poolInstance;
 };
+
