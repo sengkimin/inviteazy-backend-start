@@ -6,24 +6,16 @@ import { IInvitee } from "../interfaces/inviteesInterface"; // Import IInvitee i
 
 export class InviteeController {
   constructor(private inviteeService: IInviteeService) {}
+
   async getAllInvitees(req: Request, res: Response, next: NextFunction) {
     try {
-      const cacheKey = `data:${req.method}:${req.originalUrl}`;
-      const cacheData = await redisCache.get(cacheKey);
-  
-      if (cacheData) {
-        res.json({ message: "Cache: Get all invitees", data: JSON.parse(cacheData) });
-        return;
-      }
-  
       const result = await this.inviteeService.getAllInvitees();
-      await redisCache.set(cacheKey, JSON.stringify(result), 360);
-  
       res.json({ message: "Invitees retrieved.", data: result });
     } catch (error) {
       next(error);
     }
   }
+
 
   async createInvitee(req: Request, res: Response, next: NextFunction) {
     try {
@@ -44,24 +36,13 @@ export class InviteeController {
 
   async getInviteesByEventId(req: Request, res: Response, next: NextFunction) {
     try {
-      const cacheKey = `data:${req.method}:${req.originalUrl}`;
-      const cacheData = await redisCache.get(cacheKey);
-  
-      if (cacheData) {
-        res.json({ message: "Cache: Get invitees by event ID", data: JSON.parse(cacheData) });
-        return;
-      }
-  
       const { eventId } = req.params;
       const result = await this.inviteeService.getInviteesByEventId(eventId);
-      await redisCache.set(cacheKey, JSON.stringify(result), 360);
-  
       res.json({ message: "Invitees retrieved by event ID.", data: result });
     } catch (error) {
       next(error);
     }
   }
-  
 
   async updateInviteeStatus(req: Request, res: Response, next: NextFunction) {
     try {
@@ -80,16 +61,19 @@ export class InviteeController {
       next(error);
     }
   }
+  
+  async updateCheckInStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { event_id ,user_id} = req.params;
+      console.log("event_id", event_id, user_id);
 
-  // async updateCheckinStatus(req: Request, res: Response, next: NextFunction) {  
-  //   try {
-  //     const { id } = req.params;// Extract invite ID from route parameters
-  //     const updated = await this.inviteeService.updateCheckinStatus(id);
-  //     res.json({ message: "Invitee check-in status updated.", data: updated });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+      const updated = await this.inviteeService.updateCheckInStatus(event_id, user_id);
+      res.json({ message: "Invitee check-in status updated.", data: updated });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateCheckOutStatus(req: Request, res: Response, next: NextFunction) {
     try {
         const { id } = req.params; 

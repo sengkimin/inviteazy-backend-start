@@ -1,5 +1,4 @@
 import { IEvent, IEventRepository } from "../interfaces/eventInterface";
-import { v4 as uuidv4 } from "uuid";
 import { IEventService } from "../interfaces/eventInterface";
 
 export class EventService implements IEventService {
