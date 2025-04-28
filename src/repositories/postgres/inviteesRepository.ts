@@ -7,27 +7,22 @@ export class PostgresInviteeRepository implements IInviteeRepository {
   constructor(private pool: Pool) {}
 
   async create(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
-    const inviteeId = uuidv4();
+    // const inviteeId = uuidv4();
     const { rows } = await queryWithLogging(
       this.pool,
-      `INSERT INTO invitees (
-          id, event_id, user_id, status, qr_code,
-          is_checked_in, checked_in_at,
-          is_checked_out, checked_out_at
-       )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       RETURNING *`,
-      [
-        inviteeId,
-        invitee.event_id,
-        invitee.user_id,
-        invitee.status,
-        invitee.qr_code || null,
-        invitee.is_checked_in ?? false,
-        invitee.checked_in_at || null,
-        invitee.is_checked_out ?? false,                  
-        invitee.checked_out_at || null                 
-      ]
+    `INSERT INTO invitees (
+      id, event_id, user_id, status, qr_code,
+      is_checked_in, checked_in_at, created_at,
+      is_checked_out, checked_out_at, gift
+   )
+   VALUES ($1, $2, $3, $4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+   RETURNING *`,
+  [
+    uuidv4(), // Generate a unique ID for the invitee
+    invitee.event_id,
+    invitee.user_id,
+    invitee.status ?? "pending" // Default status value
+  ]
     );
     return rows[0];
   }
@@ -53,4 +48,36 @@ export class PostgresInviteeRepository implements IInviteeRepository {
     );
     return rows;
   }
+
+  async findById(inviteeId: string): Promise<IInvitee | null> {
+    const { rows } = await queryWithLogging(
+      this.pool,
+      `SELECT * FROM invitees WHERE id = $1`,
+      [inviteeId]
+    );
+    return rows[0] ?? null;
+  }
+
+  async updateCheckinStatus(id: string): Promise<IInvitee | null> {
+    return queryWithLogging(
+      this.pool,
+      `UPDATE public.invitees 
+       SET is_checked_in = true, checked_in_at = NOW() 
+       WHERE id = $1 
+       RETURNING id, event_id, user_id, status, qr_code, is_checked_in, checked_in_at, created_at, is_checked_out, checked_out_at, gift`,
+      [id]
+    ).then((result) => result.rows[0] ?? null);
+  }
+  
+  async updateCheckOutStatus(invite: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
+    return queryWithLogging(
+      this.pool,
+      `UPDATE public.invitees 
+       SET gift = $1, is_checked_out = true, checked_out_at = NOW() 
+       WHERE id = $2 
+       RETURNING id, event_id, user_id, status, qr_code, is_checked_in, checked_in_at, created_at, is_checked_out, checked_out_at, gift`,
+      [invite.gift_money, id]
+    ).then((result) => result.rows[0] ?? null);
+  }
+  
 }

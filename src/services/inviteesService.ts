@@ -18,4 +18,13 @@ export class InviteeService implements IInviteeService {
   async updateInviteeStatus(inviteeId: string, status: string): Promise<IInvitee> {
     return await this.inviteeRepository.updateStatus(inviteeId, status);
   }
+  async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
+    return await this.inviteeRepository.findById(inviteeId);
+  }
+  // async updateCheckinStatus(id: string): Promise<IInvitee | null> {
+  //   return await this.inviteeRepository.updateCheckinStatus(id);
+  // }
+  async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
+    return await this.inviteeRepository.updateCheckOutStatus(invitee, id);
+  }
 }
