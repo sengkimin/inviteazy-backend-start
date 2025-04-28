@@ -1,3 +1,4 @@
+
 import bcrypt from "bcrypt";
 import { UserModel } from "./models/userModel";
 import {
@@ -19,16 +20,8 @@ export class MongoUserRepository implements IUserRepository {
     }));
   }
 
-  async findById(userId: string): Promise<IUserWithoutPassword | null> {
-    const result = await UserModel.findById(userId);
-    if (!result) return null;
-
     const { id, full_name, email, phone_number, profile_picture, address }: IUserWithoutPassword = result;
     return { id, full_name, email, phone_number, profile_picture, address };
-  }
-
-  async findByEmail(email: string): Promise<IUser | null> {
-    return await UserModel.findOne({ email });
   }
 
   async create(user: Omit<IUser, "id">): Promise<IUserWithoutPassword> {

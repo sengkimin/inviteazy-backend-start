@@ -19,6 +19,12 @@ export class InviteeService implements IInviteeService {
     return await this.inviteeRepository.updateStatus(inviteeId, status);
   }
 
+  async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
+    return await this.inviteeRepository.findById(inviteeId);
+  }
+  async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
+    return await this.inviteeRepository.updateCheckOutStatus(invitee, id);
+
   async updateCheckInStatus(event_id: string, user_id:string): Promise<IInvitee> {
     return await this.inviteeRepository.updateCheckInStatus(event_id, user_id);
   }
