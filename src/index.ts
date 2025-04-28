@@ -17,6 +17,10 @@ import { EventController } from "./controllers/eventController";
 import { PostgresUserRepository } from "./repositories/postgres/userRepository";
 import { PostgresEventRepository } from "./repositories/postgres/eventRepository";  
 import { connectPostgresDb } from "./config/postgresdb/db";
+import { connectMongoDB } from "./config/mongodb/db";
+import { MongoUserRepository } from "./repositories/mongodb/userRepository";
+import { MongoEventRepository } from "./repositories/mongodb/eventRepository";
+import { MongoInviteRepository } from "./repositories/mongodb/inviteesRepository";
 
 
 
@@ -27,10 +31,16 @@ const port = 3000;
 
 
 const pgPool = connectPostgresDb(); 
-// await connectMongoDB();            
-
+// connectMongoDB();
 
 // Repositories
+// const userRepository = new MongoUserRepository();
+// const eventRepository = new MongoEventRepository();
+// const inviteeRepository = new MongoInviteRepository();
+
+
+
+
 const userRepository = new PostgresUserRepository(pgPool);
 const eventRepository = new PostgresEventRepository(pgPool);  
 const inviteeRepository = new PostgresInviteeRepository(pgPool);
