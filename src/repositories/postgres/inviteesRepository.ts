@@ -20,7 +20,6 @@ export class PostgresInviteeRepository implements IInviteeRepository {
     }
 
   async create(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
-    // const inviteeId = uuidv4();
     const { rows } = await queryWithLogging(
       this.pool,
     `INSERT INTO invitees (
@@ -31,10 +30,10 @@ export class PostgresInviteeRepository implements IInviteeRepository {
    VALUES ($1, $2, $3, $4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
    RETURNING *`,
   [
-    uuidv4(), // Generate a unique ID for the invitee
+    uuidv4(), 
     invitee.event_id,
     invitee.user_id,
-    invitee.status ?? "pending" // Default status value
+    invitee.status ?? "pending" 
   ]
     );
     return rows[0];

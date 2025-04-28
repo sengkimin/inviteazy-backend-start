@@ -60,7 +60,6 @@ export class PostgresUserRepository implements IUserRepository {
 
   }
 
-  // Create a new user
  
 }
 

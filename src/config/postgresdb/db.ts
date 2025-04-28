@@ -1,3 +1,23 @@
+import { Pool } from "pg";
+
+let poolInstance: Pool | null = null;
+
+export const connectPostgresDb = (): Pool => {
+  if (!poolInstance) {
+    poolInstance = new Pool({
+      user: process.env.POSTGRES_USER,
+      host: process.env.POSTGRES_HOST,
+      database: process.env.POSTGRES_DB,
+      password: process.env.POSTGRES_PASSWORD,
+      port: Number(process.env.POSTGRES_PORT),
+    });
+
+    console.log("Connected to PostgreSQL!");
+  }
+
+  return poolInstance;
+};
+
 // import { Pool } from "pg";
 
 // let poolInstance: Pool | null = null;
@@ -16,6 +36,7 @@
 //   }
 
 //   return poolInstance;
+// }
 
 // }
 //   return poolInstance;
@@ -61,4 +82,3 @@
 // };
 
 // F2vDAVrZXNbTnVm3
-
