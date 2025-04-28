@@ -1,16 +1,23 @@
+// import { Pool } from "pg";
+
+// let poolInstance: Pool | null = null;
 
 // export const connectPostgresDb = (): Pool => {
 //   if (!poolInstance) {
 //     poolInstance = new Pool({
-//       user: "inviteazy",
+//       user: "inviteazy",     
 //       host: "localhost",
 //       database: "mydb",
-//       password: "12345678",
-//       port: 5433,
+//       password: "12345678", 
+//       port: 5433,            
 //     });
-//     console.log(" Connected to Postgres!");
+
+//     console.log("Connected to PostgreSQL!");
 //   }
 
+//   return poolInstance;
+
+// }
 //   return poolInstance;
 //   const pool = new Pool({
 //     user: "vorleak",
@@ -21,17 +28,17 @@
 //   });
 //   return pool;
 // };
-import { Pool } from "pg";
+// import { Pool } from "pg";
 
-export const connectPostgresDb = (): Pool => {
-  const pool = new Pool({
-    user: "postgres",
-    host: "62.72.46.248",
-    database: "inviteazy_ilt",
-    password: "NZt3C7DPfWnZyy8N",
-    port: 5432,
-  });
-  return pool;
+// export const connectPostgresDb = (): Pool => {
+//   const pool = new Pool({
+//     user: "postgres",
+//     host: "62.72.46.248",
+//     database: "inviteazy_ilt",
+//     password: "NZt3C7DPfWnZyy8N",
+//     port: 5432,
+//   });
+//   return pool;
 
 // import { Pool } from "pg";
 
