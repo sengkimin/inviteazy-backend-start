@@ -63,4 +63,28 @@ export class InviteeController {
       next(error);
     }
   }
+
+  async updateCheckInStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { event_id ,user_id} = req.params;
+      console.log("event_id", event_id, user_id);
+
+      const updated = await this.inviteeService.updateCheckInStatus(event_id, user_id);
+      res.json({ message: "Invitee check-in status updated.", data: updated });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // async updateCheckInStatus(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { event_id, invitee_id } = req.params;
+  
+  //     const updated = await this.inviteeService.updateCheckInStatus(event_id, invitee_id);
+  //     res.json({ message: "Invitee check-in status updated.", data: updated });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+  
 }

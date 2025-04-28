@@ -5,6 +5,19 @@ import { queryWithLogging } from "./utils";
 
 export class PostgresInviteeRepository implements IInviteeRepository {
   constructor(private pool: Pool) {}
+  async updateCheckInStatus(event_id: string, user_id: string): Promise<IInvitee> {
+    const { rows } = await queryWithLogging(
+        this.pool,
+        `
+          UPDATE invitees
+          SET is_checked_in = true, checked_in_at = NOW()
+          WHERE event_id = $1 AND user_id = $2
+          RETURNING *`,
+        [event_id, user_id]
+      );
+
+      return rows[0];
+    }
 
   async create(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
     const inviteeId = uuidv4();
@@ -54,3 +67,6 @@ export class PostgresInviteeRepository implements IInviteeRepository {
     return rows;
   }
 }
+
+
+  

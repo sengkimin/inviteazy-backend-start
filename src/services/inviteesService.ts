@@ -18,4 +18,8 @@ export class InviteeService implements IInviteeService {
   async updateInviteeStatus(inviteeId: string, status: string): Promise<IInvitee> {
     return await this.inviteeRepository.updateStatus(inviteeId, status);
   }
+
+  async updateCheckInStatus(event_id: string, user_id:string): Promise<IInvitee> {
+    return await this.inviteeRepository.updateCheckInStatus(event_id, user_id);
+  }
 }
