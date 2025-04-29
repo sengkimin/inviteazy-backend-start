@@ -5,36 +5,40 @@ import { queryWithLogging } from "./utils";
 
 export class PostgresInviteeRepository implements IInviteeRepository {
   constructor(private pool: Pool) {}
+  updateCheckinStatus(id: string): Promise<IInvitee | null> {
+    throw new Error("Method not implemented.");
+  }
+
   async updateCheckInStatus(event_id: string, user_id: string): Promise<IInvitee> {
     const { rows } = await queryWithLogging(
-        this.pool,
-        `
-          UPDATE invitees
-          SET is_checked_in = true, checked_in_at = NOW()
-          WHERE event_id = $1 AND user_id = $2
-          RETURNING *`,
-        [event_id, user_id]
-      );
+      this.pool,
+      `
+        UPDATE invitees
+        SET is_checked_in = true, checked_in_at = NOW()
+        WHERE event_id = $1 AND user_id = $2
+        RETURNING *`,
+      [event_id, user_id]
+    );
 
-      return rows[0];
-    }
+    return rows[0];
+  }
 
   async create(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
     const { rows } = await queryWithLogging(
       this.pool,
-    `INSERT INTO invitees (
-      id, event_id, user_id, status, qr_code,
-      is_checked_in, checked_in_at, created_at,
-      is_checked_out, checked_out_at, gift
-   )
-   VALUES ($1, $2, $3, $4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
-   RETURNING *`,
-  [
-    uuidv4(), 
-    invitee.event_id,
-    invitee.user_id,
-    invitee.status ?? "pending" 
-  ]
+      `INSERT INTO invitees (
+        id, event_id, user_id, status, qr_code,
+        is_checked_in, checked_in_at, created_at,
+        is_checked_out, checked_out_at, gift
+      )
+      VALUES ($1, $2, $3, $4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+      RETURNING *`,
+      [
+        uuidv4(), 
+        invitee.event_id,
+        invitee.user_id,
+        invitee.status ?? "pending" 
+      ]
     );
     return rows[0];
   }
@@ -70,17 +74,6 @@ export class PostgresInviteeRepository implements IInviteeRepository {
     return rows[0] ?? null;
   }
 
-  async updateCheckinStatus(id: string): Promise<IInvitee | null> {
-    return queryWithLogging(
-      this.pool,
-      `UPDATE public.invitees 
-       SET is_checked_in = true, checked_in_at = NOW() 
-       WHERE id = $1 
-       RETURNING id, event_id, user_id, status, qr_code, is_checked_in, checked_in_at, created_at, is_checked_out, checked_out_at, gift`,
-      [id]
-    ).then((result) => result.rows[0] ?? null);
-  }
-  
   async updateCheckOutStatus(invite: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
     return queryWithLogging(
       this.pool,
@@ -91,8 +84,4 @@ export class PostgresInviteeRepository implements IInviteeRepository {
       [invite.gift_money, id]
     ).then((result) => result.rows[0] ?? null);
   }
-  
 }
-
-
-  
