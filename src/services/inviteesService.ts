@@ -2,8 +2,8 @@ import { IInvitee, IInviteeRepository, IInviteeService } from "../interfaces/inv
 
 export class InviteeService implements IInviteeService {
   constructor(private inviteeRepository: IInviteeRepository) {}
-  getinviteeById(inviteeId: string): Promise<IInvitee | null> {
-    throw new Error("Method not implemented.");
+ async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
+    throw new Error("Metho.");
   }
 
   async getInviteeById(inviteeId: string): Promise<IInvitee | null> {
