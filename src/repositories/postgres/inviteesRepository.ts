@@ -8,21 +8,19 @@ export class PostgresInviteeRepository implements IInviteeRepository {
   updateCheckinStatus(id: string): Promise<IInvitee | null> {
     throw new Error("Method not implemented.");
   }
-
   async updateCheckInStatus(event_id: string, user_id: string): Promise<IInvitee> {
     const { rows } = await queryWithLogging(
-      this.pool,
-      `
-        UPDATE invitees
-        SET is_checked_in = true, checked_in_at = NOW()
-        WHERE event_id = $1 AND user_id = $2
-        RETURNING *`,
-      [event_id, user_id]
-    );
+        this.pool,
+        `
+          UPDATE invitees
+          SET is_checked_in = true, checked_in_at = NOW()
+          WHERE event_id = $1 AND user_id = $2
+          RETURNING *`,
+        [event_id, user_id]
+      );
 
-    return rows[0];
-  }
-
+      return rows[0];
+    }
   async create(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
     const { rows } = await queryWithLogging(
       this.pool,

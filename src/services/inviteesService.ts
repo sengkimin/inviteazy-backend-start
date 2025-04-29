@@ -10,9 +10,6 @@ export class InviteeService implements IInviteeService {
     return this.inviteeRepository.findById(inviteeId);
   }
 
-  async updateCheckInStatus(eventId: string, userId: string): Promise<IInvitee> {
-    return this.inviteeRepository.updateCheckInStatus(eventId, userId);
-  }
 
   async createInvitee(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
     return this.inviteeRepository.create(invitee);
@@ -31,6 +28,9 @@ export class InviteeService implements IInviteeService {
   }
 
   async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
-    return this.inviteeRepository.updateCheckOutStatus(invitee, id);
+    return await this.inviteeRepository.updateCheckOutStatus(invitee, id);}
+
+  async updateCheckInStatus(event_id: string, user_id:string): Promise<IInvitee> {
+    return await this.inviteeRepository.updateCheckInStatus(event_id, user_id);
   }
 }
