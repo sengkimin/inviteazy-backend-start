@@ -2,9 +2,10 @@ import { IInvitee, IInviteeRepository, IInviteeService } from "../interfaces/inv
 
 export class InviteeService implements IInviteeService {
   constructor(private inviteeRepository: IInviteeRepository) {}
- async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
-    throw new Error("Metho.");
+  async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
+    return this.inviteeRepository.findById(inviteeId);  // Ensure this is implemented correctly
   }
+  
 
   async getInviteeById(inviteeId: string): Promise<IInvitee | null> {
     return this.inviteeRepository.findById(inviteeId);
@@ -27,10 +28,12 @@ export class InviteeService implements IInviteeService {
     return this.inviteeRepository.updateStatus(inviteeId, status);
   }
 
-  async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
-    return await this.inviteeRepository.updateCheckOutStatus(invitee, id);}
 
   async updateCheckInStatus(event_id: string, user_id:string): Promise<IInvitee> {
     return await this.inviteeRepository.updateCheckInStatus(event_id, user_id);
   }
+  async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
+    return this.inviteeRepository.updateCheckOutStatus(invitee, id); // Ensure this is correct in the repository
+  }
+  
 }
