@@ -53,7 +53,7 @@ CREATE TABLE invitees (
     checked_in_at TIMESTAMP,
     is_checked_out BOOLEAN DEFAULT FALSE,
     checked_out_at TIMESTAMP,
-    gift_money NUMERIC DEFAULT 0,
+    gift NUMERIC DEFAULT 0,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

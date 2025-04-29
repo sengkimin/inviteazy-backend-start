@@ -2,11 +2,13 @@ import { IInvitee, IInviteeRepository, IInviteeService } from "../interfaces/inv
 
 export class InviteeService implements IInviteeService {
   constructor(private inviteeRepository: IInviteeRepository) {}
-  getinviteeById(inviteeId: string): Promise<IInvitee | null> {
-    throw new Error("Method not implemented.");
+
+  async getinviteeById(inviteeId: string): Promise<IInvitee | null> {
+    return await this.inviteeRepository.findById(inviteeId);
   }
-  updateCheckInStatus(event_id: string, user_id: string): Promise<IInvitee> {
-    throw new Error("Method not implemented.");
+
+  async updateCheckInStatus(event_id: string, user_id: string): Promise<IInvitee> {
+    return await this.inviteeRepository.updateCheckInStatus(event_id, user_id);
   }
 
   async createInvitee(invitee: Omit<IInvitee, "id" | "created_at">): Promise<IInvitee> {
@@ -24,9 +26,10 @@ export class InviteeService implements IInviteeService {
   async updateInviteeStatus(inviteeId: string, status: string): Promise<IInvitee> {
     return await this.inviteeRepository.updateStatus(inviteeId, status);
   }
+
   async updateCheckOutStatus(invitee: Omit<IInvitee, "id">, id: string): Promise<IInvitee | null> {
     return await this.inviteeRepository.updateCheckOutStatus(invitee, id);
+  }
+}
 
-}
-}
 
