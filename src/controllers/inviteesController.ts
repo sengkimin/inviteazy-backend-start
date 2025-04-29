@@ -17,21 +17,6 @@ export class InviteeController {
   }
 
 
-  async createInvitee(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { event_id, user_id } = req.body;
-      const inviteeData: Omit<IInvitee, "id" | "created_at"> = {
-        event_id,
-        user_id,
-        status: "pending", // Default status value
-      };
-  
-      const newInvitee = await this.inviteeService.createInvitee(inviteeData);
-      res.status(201).json({ message: "Invitee created.", data: newInvitee });
-    } catch (error) {
-      next(error);
-    }
-  }
   
 
   async getInviteesByEventId(req: Request, res: Response, next: NextFunction) {

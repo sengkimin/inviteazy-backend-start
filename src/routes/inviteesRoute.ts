@@ -11,8 +11,7 @@ export default function inviteeRoutes(controller: InviteeController): Router {
   
   router.get("/", authMiddleware, controller.getAllInvitees.bind(controller));
   router.get("/:eventId", authMiddleware, controller.getInviteesByEventId.bind(controller));
-  router.post("/create", controller.createInvitee.bind(controller));
-  router.patch("/checkout/:id", controller.updateCheckOutStatus.bind(controller));
+  router.patch("/checkout/:id", authMiddleware, controller.updateCheckOutStatus.bind(controller));
   router.patch("/checkin/:event_id/:user_id", authMiddleware, controller.updateCheckInStatus.bind(controller));
   return router;
 }
