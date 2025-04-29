@@ -1,33 +1,54 @@
 import { Request, Response, NextFunction } from "express";
 import { IInviteeService } from "../interfaces/inviteesInterface";
 import redisCache from "../services/cacheService";
-import { IInvitee } from "../interfaces/inviteesInterface"; // Import IInvitee interface
+import { IInvitee } from "../interfaces/inviteesInterface"; 
 
 
 export class InviteeController {
   constructor(private inviteeService: IInviteeService) {}
 
-  async getAllInvitees(req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await this.inviteeService.getAllInvitees();
-      res.json({ message: "Invitees retrieved.", data: result });
-    } catch (error) {
-      next(error);
+async getInviteesByEventId(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { eventId } = req.params;
+    const cacheKey = `data:${req.method}:${req.originalUrl}`; 
+    const cacheData = await redisCache.get(cacheKey);
+
+    if (cacheData) {
+      res.json({ message: `Cache: Get invitees by event ID ${eventId}`, data: JSON.parse(cacheData) });
+      return;
     }
+
+    const result = await this.inviteeService.getInviteesByEventId(eventId);
+    await redisCache.set(cacheKey, JSON.stringify(result), 360); 
+
+    res.json({ message: `Invitees retrieved for event ID ${eventId}.`, data: result });
+  } catch (error) {
+    next(error);
   }
+}
 
 
   
 
-  async getInviteesByEventId(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { eventId } = req.params;
-      const result = await this.inviteeService.getInviteesByEventId(eventId);
-      res.json({ message: "Invitees retrieved by event ID.", data: result });
-    } catch (error) {
-      next(error);
+async getAllInvitees(req: Request, res: Response, next: NextFunction) {
+  try {
+    const cacheKey = `data:${req.method}:${req.originalUrl}`;
+    const cacheData = await redisCache.get(cacheKey);
+
+    if (cacheData) {
+      res.json({ message: "Cache: Get all invitees", data: JSON.parse(cacheData) });
+      return;
     }
+
+    const result = await this.inviteeService.getAllInvitees();
+    await redisCache.set(cacheKey, JSON.stringify(result), 360); 
+
+    res.json({ message: "Invitees retrieved.", data: result });
+  } catch (error) {
+    next(error);
   }
+}
+
 
   async updateInviteeStatus(req: Request, res: Response, next: NextFunction) {
     try {
